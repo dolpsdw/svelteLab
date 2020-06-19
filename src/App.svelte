@@ -1,5 +1,8 @@
 <script>
+import Test from "./Comp.svelte";
+
   export let name;
+  import Comp from "./Comp.svelte"
 </script>
 
 <style>
@@ -9,3 +12,4 @@
 </style>
 
 <h1>Hello {name}!</h1>
+<Comp></Comp>
