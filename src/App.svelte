@@ -1,8 +1,7 @@
 <script>
-import Test from "./Comp.svelte";
-
+  import Container from "./Container.svelte";
   export let name;
-  import Comp from "./Comp.svelte"
+  import Comp from "./Comp.svelte";
 </script>
 
 <style>
@@ -12,4 +11,7 @@ import Test from "./Comp.svelte";
 </style>
 
 <h1>Hello {name}!</h1>
-<Comp></Comp>
+<hr />
+<Comp />
+<hr />
+<Container />
