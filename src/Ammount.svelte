@@ -24,6 +24,9 @@
       console.log(lastValidWin);
       currentWin = lastValidWin + 1 - 1;
       // currentWin reAsignation does not work on this update cycle
+      // Javascript to the rescue
+      e.target.value = lastValidWin;
+      // And this is not firing handleWinInput again
     } else {
       lastValidWin = e.target.valueAsNumber;
     }
@@ -33,6 +36,7 @@
     if (isNaN(e.target.valueAsNumber)) {
       console.log(lastValidRisk);
       currentRisk = lastValidRisk;
+      e.target.value = lastValidRisk;
     } else {
       lastValidRisk = e.target.valueAsNumber;
     }
