@@ -77,6 +77,10 @@
     return i + 1;
   }
   /*Reactive Blocks $: calculatedRisk*/
+  $: {
+    currentRisk = currentWin * 10;
+    console.log("ReRender", currentRisk);
+  }
 </script>
 
 <!-- https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/number -->
