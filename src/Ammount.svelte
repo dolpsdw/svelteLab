@@ -23,29 +23,30 @@
       // single digit will put a 0
       e.target.value = 0;
     }
-    if (isNaN(e.target.valueAsNumber)) {
-      // [+, -, e] trigger this
-      console.log(lastValidWin);
-      currentWin = lastValidWin + 1 - 1;
-      // currentWin reAsignation does not work on this update cycle
-    } else {
+    if (!isNaN(e.target.valueAsNumber)) {
+      // ![+, -, e] trigger this
       lastValidWin = e.target.valueAsNumber;
     }
-
     // Javascript to the rescue also reformat 00000000 case
     e.target.value = lastValidWin;
     // And this is not firing handleWinInput again
   };
   const handleRiskInput = (e) => {
     console.log("handledRiskStart", e);
-    if (isNaN(e.target.valueAsNumber)) {
-      console.log(lastValidRisk);
-      currentRisk = lastValidRisk;
-    } else {
+    if (e.inputType === "deleteContentBackward" && lastValidWin < 10) {
+      // single digit will put a 0
+      e.target.value = 0;
+    }
+    if (!isNaN(e.target.valueAsNumber)) {
+      // ![+, -, e] trigger this
       lastValidRisk = e.target.valueAsNumber;
     }
+    // Javascript to the rescue also reformat 00000000 case
     e.target.value = lastValidRisk;
+    // And this is not firing handleRiskInput again
   };
+
+  /*Reactive Blocks $: calculatedRisk*/
 </script>
 
 <!-- https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/number -->
