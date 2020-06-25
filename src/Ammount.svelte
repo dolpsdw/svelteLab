@@ -20,15 +20,33 @@
   const handleWinInput = (e) => {
     console.log("handledWinStart", e);
     if (e.inputType === "deleteContentBackward" && lastValidWin < 10) {
-      // single digit will put a 0
+      // single digit delete will put a 0
       e.target.value = 0;
     }
+    const prevValidWin = lastValidWin; //needed for getCarretSelection
     if (!isNaN(e.target.valueAsNumber)) {
       // ![+, -, e] trigger this
       lastValidWin = e.target.valueAsNumber;
     }
     // Javascript to the rescue also reformat 00000000 case
-    e.target.value = lastValidWin;
+    e.target.value = lastValidWin.toFixed(2);
+    const lastValidWinString = lastValidWin.toString();
+    e.target.setAttribute("type", "text");
+    if (e.data === ",") {
+      // If , pressed
+      e.target.setSelectionRange(
+        lastValidWinString.length + 1,
+        lastValidWinString.length + 1
+      );
+    } else {
+      const carret = getCarretSelection(
+        prevValidWin,
+        lastValidWin,
+        e.inputType
+      );
+      e.target.setSelectionRange(carret, carret);
+    }
+    e.target.setAttribute("type", "number");
     // And this is not firing handleWinInput again
   };
   const handleRiskInput = (e) => {
@@ -45,7 +63,19 @@
     e.target.value = lastValidRisk;
     // And this is not firing handleRiskInput again
   };
-
+  function getCarretSelection(prevValidWin, lastValidWin, inputType) {
+    if (prevValidWin === lastValidWin) {
+      return lastValidWin.toString().length;
+    }
+    const prevValidWinString = prevValidWin.toFixed(2);
+    const lastValidWinString = lastValidWin.toFixed(2);
+    let i = 0;
+    while (prevValidWinString[i] === lastValidWinString[i]) i++;
+    if (inputType.includes("delete")) {
+      return i;
+    }
+    return i + 1;
+  }
   /*Reactive Blocks $: calculatedRisk*/
 </script>
 
