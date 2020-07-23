@@ -81,6 +81,17 @@
     currentRisk = currentWin * 10;
     console.log("ReRender", currentRisk);
   }
+  /*
+  let lastValidWin = new BehaviorSubject(0);
+  lastValidWin.set = lastValidWin.next;
+  let lastValidRisk = new BehaviorSubject(0);
+  lastValidRisk.set = lastValidRisk.next;
+  */
+  /*if (e.data === ".") {
+      e.preventDefault();
+    }
+    
+    return false;*/
 </script>
 
 <!-- https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/number -->
