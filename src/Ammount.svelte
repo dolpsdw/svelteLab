@@ -1,4 +1,6 @@
 <script>
+  import InputCurrency from "./InputCurrency/InputCurrency.svelte";
+
   /** configurable separator , and .
    *   +- characters not allowed
    * edgeCases:
@@ -108,3 +110,4 @@
   min="1"
   on:input={handleRiskInput}
   bind:value={currentRisk} />
+<InputCurrency />
