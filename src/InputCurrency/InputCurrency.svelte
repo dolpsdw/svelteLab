@@ -8,9 +8,13 @@
   5- Discard Input events from type contains drag or drop
   */
   /* Tips:
-  change the type of the e.target to text on focus will reset the carret.
-  change the type of the e.target to text will let you use setSelection range https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement
+  selectionStart and selectioncapable inputs text|search|password|tel|url
+  change the type of the e.target to selectioncapable on focus will reset the carret.
+  change the type of the e.target from selectioncapable to number will let you use setSelection range https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement
   value ALWAYS have to be a new Big().toFixed => this ensures that the internal decimal separator is .
+  Dont use the svelte bind to value on input number, since it will be undefined is not a number and missbehave in certain situations.
+  Use target.value to access the real and current text on the input number
+  Maximicing the compativility: input type=number, onFocustypeTel inputmode=decimal
  */
   import Big from "big.js";
   export const fixedDigits = 2;
@@ -67,24 +71,58 @@
       return;
     }
     // At this point the new value is a valid input
+    //LEts try to hijack the carret someHow to solve 6000 -> 60000 in what place the 0 is inserted ?
+    const selection = window.getSelection();
+    //In case Navigator is compatible with selection api
+    let carretPos;
+    if (selection) {
+      if (selection.type === "Caret" && selection.rangeCount === 1) {
+        //In case the selection is a single Caret, and is active
+        selection.modify("extend", "backward", "line"); // select all the line
+        const carretSelection = selection.toString(); // This will have 01 string at start from  01,00
+        if (!carretSelection) {
+          carretPos = undefined; // In case ,00 the carretSelection will be ""
+        } else {
+          let removedPrependedZeros;
+          if (carretSelection.includes(",") || carretSelection.includes(".")) {
+            removedPrependedZeros = new Big(carretSelection);
+          } else {
+            removedPrependedZeros = new Big(carretSelection);
+          }
+          carretPos = removedPrependedZeros.length;
+        }
+      }
+    }
     // Reformat current input and put the carret
     e.target.value = valueAsBig;
-    const carret = getCarretSelection(prevValueAsBig, valueAsBig, e.inputType);
-    setCarret(e.target, carret);
+    const carret = getCarretSelection(
+      prevValueAsBig,
+      valueAsBig,
+      e.inputType,
+      prevCarret
+    );
+    setCarret(e.target, carretPos ? carretPos : carret);
     // Safe the valid value in previus
     prevValue = valueAsBig;
     prevCarret = carret;
   }
-
   //afterUpdate(() => console.log("afterUpdate", value));
   //beforeUpdate(() => console.log("beforeUpdate", value)); // This does not work properly value is already changed so we need prevValue
   /*Util*/
   function isNullUndefEmpty(obj) {
     return obj === null || obj === undefined || obj === "";
   }
-  function getCarretSelection(prevValidWin, lastValidWin, inputType) {
+  function getCarretSelection(
+    prevValidWin,
+    lastValidWin,
+    inputType,
+    prevCarret
+  ) {
     if (prevValidWin === lastValidWin) {
-      return lastValidWin.toString().length;
+      if (inputType.includes("delete")) {
+        return prevCarret;
+      }
+      return prevCarret + 1;
     }
     const prevValidWinString = prevValidWin.toString();
     const lastValidWinString = lastValidWin.toString();
@@ -96,7 +134,7 @@
     }
     return i + 1;
   }
-  function setCarret(htmlElement, pos = prevCarret) {
+  function setCarret(htmlElement, pos) {
     htmlElement.setAttribute("type", "tel");
     userSelected = false;
     htmlElement.setSelectionRange(pos, pos); // This will fire handleSelect
