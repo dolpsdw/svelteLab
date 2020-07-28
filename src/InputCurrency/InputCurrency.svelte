@@ -81,7 +81,7 @@
         selection.modify("extend", "backward", "line"); // select all the line
         const carretSelection = selection.toString(); // This will have 01 string at start from  01,00
         if (isNullUndefEmpty(carretSelection)) {
-          carretPos = undefined; // In case |,00 the carretSelection will be "" or in case of 1|23,45 delete 1 BUT what happen when ,|00 and delete ,?
+          carretPos = undefined; // In case |,00 the carretSelection will be "" or in case of 1|23,45 delete 1 //? what happen when ,|00 and delete ,?
         } else {
           let removedPrependedZeros;
           if (carretSelection.includes(",") || carretSelection.includes(".")) {
@@ -89,7 +89,7 @@
           } else {
             removedPrependedZeros = new Big(carretSelection);
           }
-          carretPos = removedPrependedZeros.length;
+          carretPos = removedPrependedZeros.toString().length;
         }
       }
     }
