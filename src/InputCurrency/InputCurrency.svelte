@@ -44,7 +44,7 @@
     }
 
     const prevValueAsBig = new Big(prevValue).toFixed(fixedDigits);
-    if (isNaN(+e.target.value)) {
+    if (Number.isNaN(+e.target.value)) {
       //In case of new Value not being a valid number
       e.target.value = prevValueAsBig; //Fallback to previus value
       setCarret(e.target, prevCarret);
@@ -80,8 +80,8 @@
         //In case the selection is a single Caret, and is active
         selection.modify("extend", "backward", "line"); // select all the line
         const carretSelection = selection.toString(); // This will have 01 string at start from  01,00
-        if (!carretSelection) {
-          carretPos = undefined; // In case ,00 the carretSelection will be ""
+        if (isNullUndefEmpty(carretSelection)) {
+          carretPos = undefined; // In case |,00 the carretSelection will be "" or in case of 1|23,45 delete 1 BUT what happen when ,|00 and delete ,?
         } else {
           let removedPrependedZeros;
           if (carretSelection.includes(",") || carretSelection.includes(".")) {
